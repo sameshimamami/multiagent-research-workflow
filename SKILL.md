@@ -13,6 +13,7 @@ description: 多智能体+网页模型监督的科研协作工作流。当用户
 - **产出监督**：任何产出按 `docs/templates/08-监督验收.md` 打分表 0/1 检查，不过就 replan，最多 2 轮，升级给人，通过记 learn。
 - **额度规则**：网页模型额度用完自动等恢复时间，不询问用户。
 - **网页 LLM 桥接**：`bridge/bridge.js`（Playwright+CDP 驱动 ChatGPT/Claude/Gemini）。
+- **hermes/Claude Code 遇难题可问 GPT**：hermes 或 Claude Code 写代码遇到难、不确定的问题时，主动通过 bridge 问网页版 GPT（思考模式）要方案/思路，拿到解答后再继续写码，不必硬撑或卡住。
 
 ## 用法
 - 研究项目（论文调研/实验/报告）：按六步流程推进。
