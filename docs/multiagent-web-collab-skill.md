@@ -45,6 +45,7 @@
 - **Claude 输入技巧**：composer 被 overlay 挡住时用 `click({ force: true })` 再输入；等待回复要等新 assistant 消息出现且 `[data-is-streaming="true"]` 消失。
 - **Claude 附件配额**：每个 PDF 页算一张图；老聊天附件多会超配额 → 开新对话（`https://claude.ai/new`）。
 - **Gmail 发送**：`node send-gmail.js "<to>" "<subject>" "<body-file>"`（To 用 `input[aria-label="发送至收件人"]` + fill，Enter 确认收件人，附件注入，支持 `--dry-run`）。
+- **固定对话原则（用户明确要求）**：一个任务在网页上和 GPT/Claude 聊时，**只用一个固定对话**，后续迭代都进同一个对话，绝不新建对话框。任务开始时记录对话 URL（GPT: `chatgpt.com/c/<id>`；Claude: `claude.ai/chat/<id>`），之后直接导航回该 URL 继续，保持上下文连续、不浪费额度。唯一例外：Claude 附件配额超限时（PDF 页算图）才开新对话。
 
 ---
 
