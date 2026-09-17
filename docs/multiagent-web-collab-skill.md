@@ -64,3 +64,63 @@
 - 邮件/申请材料等正式产出：Claude 在指定聊天里写 → 用户审核 → 再发送。
 - **学术写作约束（用户明确要求·默认生效）**：任何学术相关写作（论文/Proposal/PPT 讲稿/Research Statement/稿子/邮件等），写作前先加载 `skills/academic-writing-constraints.md` 并附加其内容到 prompt；模型完成后用其中的总检查清单自查。核心：问题驱动单一主导问题、禁"不是X而是Y"、方法写成"任务+采用什么解决"、方法流水线输入输出环环相扣、实验四段式（目的→设置→趋势→数字→总结）、不过度 claim。
 - 每完成一个任务，把可复用的提示词、脚本、learn 记录到 `research-workflow/` 相应文档，持续内化。
+
+---
+
+## 硬规则：派活给 hermes / Claude Code —— 开终端窗口问它们（用户明确要求 2026-09）
+
+**背景**：DSH 不要试图把 hermes / Claude Code 当「后台无人值守的 shell 命令」跑（沙箱、TTY、交互确认都会踩坑）。
+正确做法是**开一个可见的终端窗口**，在窗口里把它们唤醒，然后像问人一样把任务交代给它们。
+
+### 开窗命令（Windows Terminal）
+
+- **hermes（WSL 侧）**：先 `wsl -d Ubuntu` 进 WSL，再输入 `hermes` 唤醒。
+  ```powershell
+  Start-Process wt.exe -ArgumentList 'new-tab','--title','hermes','wsl.exe','-d','Ubuntu','--','bash','-lc','cd "<工作目录>"; hermes'
+  ```
+  等价手工操作：开终端 → 敲 `wsl -d Ubuntu` 回车 → 敲 `hermes` 回车。
+  实测：hermes v0.11.0，`/home/stf/.local/bin/hermes`，交互式 TUI（28 tools / 84 skills，默认 `deepseek-v4-pro`）。
+
+- **Claude Code（Windows 侧）**：终端里直接 `claude`（→ `C:\Users\我\.local\bin\claude.exe`）。
+  ```powershell
+  Start-Process wt.exe -ArgumentList 'new-tab','--title','claude','claude.exe'
+  ```
+  实测：`claude --version` → `2.1.216 (Claude Code)`。
+
+- 一个任务一个窗口，标题写清是谁 + 干什么（如 `--title hermes-写码`），用户一眼能看到进度。
+- 两边都支持非交互参数（hermes `-z "<prompt>"`、claude `-p "<prompt>"`），但**默认走可见窗口**——用户要能看见、能插话。
+
+### 让它们看文件：直接给绝对路径
+
+**不要**把长文粘进终端（会截断、转义出错、中文乱码）。把提示词写成文件，窗口里只给路径。
+
+| 智能体 | 运行侧 | 给它的路径形态 | 例 |
+|--------|--------|----------------|-----|
+| Claude Code | Windows | Windows 绝对路径 | `C:\Users\我\Documents\DEEPSEEK\research-workflow\dispatch\0014-写码.md` |
+| hermes | WSL | WSL 绝对路径 | `/mnt/c/Users/我/Documents/DEEPSEEK/research-workflow/dispatch/0014-写码.md` |
+
+- **转换规则**：`C:\` → `/mnt/c/`，反斜杠 → 正斜杠；路径含中文/空格一律加引号。
+- 提示词文件按 `research-workflow/dispatch/NNNN-主题.md` 规范写（头部标「给 hermes」或「给 Claude Code」）；
+  窗口里只交代一句：`读 <绝对路径>，照它执行`。
+- 交代完先让它们回一句「读到了 / 开始干」，再让它们跑；干完 DSH 读回产物验收（`templates/08-监督验收.md`）。
+
+---
+
+## 硬规则：有文件就发附件，不要往输入框粘贴长文
+
+**背景**：把整篇文档粘贴进网页模型的输入框会踩三个坑（2026-09 实测）：
+1. **长度上限**：ChatGPT 直接拒收长消息（返回"你提交的消息过长，请编辑后重新发送"）。实测 37K 字符被拒；重复成 74K 更必拒。
+2. **内容重复**：对 ProseMirror/contenteditable 用 `element.fill()` 会**把内容写两遍**（实测 36,903 字符的 prompt 在 composer 里变成 75,830，ratio 2.055）。原因是先做了 DOM 级清空（`textContent=''`），ProseMirror 内部状态未同步，随后的插入与旧状态合并导致重复。
+3. **校验失效**：只校验"长度 ≥ 90%"抓不到重复，必须**同时校验上界**（> 1.2× 即中止）。
+
+### 正确做法
+- **文档一律走附件**：用 `page.setInputFiles()` 上传到隐藏的 `input[type=file]`，等附件 chip 出现后再发消息。
+  - ChatGPT：`input#upload-files`
+  - Claude：`input#chat-input-file-upload-bottom`
+- **消息只写"要求 + 任务 + 约束"**（通常 2–4K 字符），正文交给附件。
+- **清空输入框只用键盘事件**：`Control+A` → `Delete`（重复 3 次），**不要**用 `textContent=''`。
+- **插入长文本用 `keyboard.insertText()`**，不要用 `keyboard.type()`（会触发 GPT 写作块编辑器）。
+- **双边界校验**：插入后校验 `0.9× ≤ len ≤ 1.2×`，越界即中止，不要抱着侥幸提交。
+- **一条消息只发一次**：发前把完整 prompt 写进文件、校验长度，切勿分次补发。
+
+参考实现：`web-llm-bridge/attach-send.mjs`（用法：`node attach-send.mjs gpt|claude <附件路径> <消息文件>`）。

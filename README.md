@@ -43,6 +43,11 @@ GPT(thinking) proposes → Claude(max) audits → User approves → hermes write
 - **Learn memory**: pitfalls recorded; consulted before generating the next prompt.
 - **Web-LLM bridge** (`bridge/`): Playwright + Chrome DevTools Protocol drives logged-in
   ChatGPT / Claude / Gemini — supports thinking mode, drawing, file upload, and robust reply-waiting.
+- **Dispatch to local agents via a visible terminal window**: never drive hermes / Claude Code as
+  unattended background shell commands. Open a Windows Terminal tab and wake them up:
+  `wsl -d Ubuntu` → `hermes` for hermes, plain `claude` for Claude Code.
+  Files are handed over as **absolute paths** — Windows paths (`C:\...`) for Claude Code,
+  WSL paths (`/mnt/c/...`) for hermes — with long prompts written to `dispatch/NNNN-*.md` files.
 
 ### Repository Layout
 
@@ -108,6 +113,11 @@ GPT(思考)提方案 → Claude(max)审计 → 用户审核 → hermes 写码跑
 - **learn 记忆**：每次踩坑记进工作流记忆，下次生成提示词前先查。
 - **网页 LLM 桥接**（`bridge/`）：Playwright + CDP 驱动 Chrome 里已登录的 ChatGPT/Claude/Gemini，
   支持思考模式、画图、文件上传、稳健等回复。
+- **派活给本地智能体要开可见终端窗口**：不要把 hermes / Claude Code 当后台无人值守命令跑。
+  开一个 Windows Terminal 标签页把它们唤醒：hermes 先 `wsl -d Ubuntu` 再输入 `hermes`；
+  Claude Code 直接敲 `claude`。**让它们看文件就直接给绝对路径**——Claude Code 给 Windows 路径
+  `C:\...`，hermes 给 WSL 路径 `/mnt/c/...`；长提示词写成 `dispatch/NNNN-*.md`，窗口里只说
+  「读 <绝对路径>，照它执行」。
 
 ### 目录
 

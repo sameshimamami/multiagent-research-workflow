@@ -14,6 +14,10 @@ description: 多智能体+网页模型监督的科研协作工作流。当用户
 - **额度规则**：网页模型额度用完自动等恢复时间，不询问用户。
 - **网页 LLM 桥接**：`bridge/bridge.js`（Playwright+CDP 驱动 ChatGPT/Claude/Gemini）。
 - **hermes/Claude Code 遇难题可问 GPT**：hermes 或 Claude Code 写代码遇到难、不确定的问题时，主动通过 bridge 问网页版 GPT（思考模式）要方案/思路，拿到解答后再继续写码，不必硬撑或卡住。
+- **派活给 hermes / Claude Code 要开终端窗口问它们（硬约束）**：不要后台无人值守地 shell 调用它们。**开一个可见的终端窗口**，在里面唤醒它们再把任务交代过去。
+  - hermes（WSL）：`wsl -d Ubuntu` 进 WSL → 输入 `hermes` 唤醒（`Start-Process wt.exe -ArgumentList 'new-tab','--title','hermes','wsl.exe','-d','Ubuntu','--','bash','-lc','cd "<工作目录>"; hermes'`）。
+  - Claude Code（Windows）：终端里直接 `claude`（`C:\Users\我\.local\bin\claude.exe`）。
+  - **让它们看文件就直接给绝对路径**：Claude Code 给 Windows 路径 `C:\...`；hermes 给 WSL 路径 `/mnt/c/...`（`C:\`→`/mnt/c/`、反斜杠→正斜杠，中文/空格加引号）。长提示词写成 `dispatch/NNNN-主题.md`，窗口里只说「读 <绝对路径>，照它执行」。
 
 ## 用法
 - 研究项目（论文调研/实验/报告）：按六步流程推进。
