@@ -24,4 +24,13 @@ description: 多智能体+网页模型监督的科研协作工作流。当用户
 - 做 PPT/改代码/跑实验：先生成提示词（按 `docs/templates/` 对应模板）再派活。
 - 需要网页模型帮忙：`node bridge/bridge.js ask <gpt|claude|gemini> "<prompt>"`、`draw <gemini|gpt> "<画图>" --out 目录`。
 
+## 可叠加的专项 skill（`docs/` 内，按任务调用）
+
+| skill | 何时用 |
+|---|---|
+| `docs/academic-writing-constraints.md` | **所有学术写作都叠加**：附到 prompt 开头，要求"逐条遵守、完成后逐条自查" |
+| `docs/论文精读.md` | 读论文/技术报告，产出固定 14 组画像。**第一原则：必须真检索读原文，不许凭记忆** |
+| `docs/会议审稿.md` | 投稿前自查 / 模拟审稿：上传论文给网页 GPT **和** Claude，各自按 ICLR/NeurIPS/ACL/AAAI 标准**独立**评审，**两轮**，强制核查细节与数据 |
+| `docs/科研申报书写作.md` | 写/改申报书、开题报告、结题报告 |
+
 > 引用/使用请注明出处并 star：https://github.com/sameshimamami/multiagent-research-workflow

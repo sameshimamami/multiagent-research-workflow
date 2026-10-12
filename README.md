@@ -54,6 +54,10 @@ GPT(thinking) proposes → Claude(max) audits → User approves → hermes write
 | Path | Description |
 |------|-------------|
 | `docs/` | Workflow specs & prompt templates (blueprint / prompt-gen spec / note spec / orchestration / optimization / research-project workflow / 8 templates) |
+| `docs/academic-writing-constraints.md` | **Academic writing hard constraints** — 16 rules (one dominant problem, no binary-opposition phrasing, no over-claiming…). Stack on top of every writing task. |
+| `docs/论文精读.md` | **Paper reading** — a fixed 14-point profile per paper (task / datasets / metrics / backbones / scores / SOTA margin / open source / compute / module breakdown). **Rule #1: actually retrieve and read the paper — never answer from memory.** |
+| `docs/会议审稿.md` | **Peer review at top-conference level** — upload your paper to web GPT *and* Claude, each reviews independently against the ICLR/NeurIPS/ACL/AAAI rubric, **two rounds**, with a mandatory **details-and-data verification checklist** (table numbers vs. text, claims vs. evidence, baseline fairness, citation existence). |
+| `docs/科研申报书写作.md` | **Grant-proposal writing** — how to separate research scenario / subject / scientific question, a four-step structure per challenge, fact-checking discipline, and a 14-item pre-submission checklist. |
 | `bridge/` | Web-LLM bridge (`bridge.js`, `md2pdf.js`, `relaunch-chrome.ps1`, diagnostics) |
 | `example/` | Example project: SPY VaR forecasting (end-to-end artifacts) |
 
@@ -124,6 +128,10 @@ GPT(思考)提方案 → Claude(max)审计 → 用户审核 → hermes 写码跑
 | 路径 | 说明 |
 |------|------|
 | `docs/` | 工作流规范与提示词模板（总蓝图/提示词生成规范/笔记规范/落地编排/工作流优化/研究项目工作流/8 个模板） |
+| `docs/academic-writing-constraints.md` | **学术写作硬约束**——16 条（单一主导问题、禁二元对立句式、禁过度声称…）。**所有写作任务都叠加使用**。 |
+| `docs/论文精读.md` | **论文精读**——每篇固定 14 组问题（任务/数据集/指标/backbone/得分/超SOTA/开源/算力/模块拆解）。**第一原则：必须真的检索并读原文，不许凭记忆作答**。 |
+| `docs/会议审稿.md` | **顶会级同行评审**——把论文上传给网页 GPT **和** Claude，各自按 ICLR/NeurIPS/ACL/AAAI 评审表**独立**评审，**两轮**进行，并强制做**细节与数据核查清单**（表格数字 vs 正文、声称 vs 证据、基线公平性、引用是否真实存在）。 |
+| `docs/科研申报书写作.md` | **科研申报书写作**——研究场景/研究对象/科学问题的三层区分、每个挑战的四步结构、事实核查纪律、提交前 14 项自检清单。 |
 | `bridge/` | 网页 LLM 桥接（bridge.js / md2pdf.js / relaunch-chrome.ps1 / 诊断脚本） |
 | `example/` | 示例项目：SPY VaR 预测（全流程产物展示） |
 
